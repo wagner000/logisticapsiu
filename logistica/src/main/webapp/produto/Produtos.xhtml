@@ -1,0 +1,74 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">Produtos</ui:define>
+
+	<ui:define name="corpo">
+
+		<f:metadata>
+			<o:viewParam name="produto" />
+			<f:event listener="#{cadastroProdutoBean.init}" type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frmProdutos">
+			<h1>Produtos</h1>
+
+			<p:messages id="messagesP" autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" disabled="true" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="Descrição" />
+				<p:inputText size="30" />
+
+				<p:outputLabel value="Embalagem" />
+				<p:selectOneMenu id="console" value="#{cadastroProdutoBean.embalagem}"
+					style="width:125px">
+					<f:selectItem itemLabel="Todos" itemValue="todos" />
+					<f:selectItem itemLabel="2L" itemValue="2L" />
+					<f:selectItem itemLabel="1,5L" itemValue="1,5L" />
+					<f:selectItem itemLabel="1L" itemValue="1L" />
+					<f:selectItem itemLabel="500ml" itemValue="500ml" />
+					<f:selectItem itemLabel="450ml" itemValue="450ml" />
+					<f:selectItem itemLabel="330ml" itemValue="330ml" />
+					<f:selectItem itemLabel="250ml" itemValue="250ml" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+
+			<p:dataTable id="produtosTable" var="produto"
+				value="#{cadastroProdutoBean.produtos}" rowKey="#{produto}"
+				style="margin-top: 20px;width:75%; margin-right: auto; margin-left: auto;"
+				emptyMessage="Nenhum produto encontrado." rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+				<p:column headerText="Código" style="text-align: center; width:15%; ">
+					<h:outputText value="#{produto.codigo}" />
+				</p:column>
+				
+				<p:column headerText="Embalagem" style="text-align: center; width:15%; ">
+					<h:outputText value="#{produto.embalagem}" />
+				</p:column>
+				
+				<p:column headerText="Nome" style=" ">
+					<h:outputText value="#{produto.nome}" />
+				</p:column>
+
+			</p:dataTable>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

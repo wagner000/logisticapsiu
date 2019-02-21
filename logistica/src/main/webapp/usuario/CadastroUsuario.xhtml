@@ -1,0 +1,111 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">Usuarios</ui:define>
+
+	<ui:define name="corpo">
+	
+		<f:metadata>
+			<o:viewParam name="usuario" />
+			<f:event listener="#{cadastroUsuarioBean.init}" type="preRenderView" />
+		</f:metadata>
+	
+		<h:form id="frmUsuarios">
+			<h1>Usuários</h1>
+
+			<p:messages id="messagesP" autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" disabled="true" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton process="@this" value="Novo" oncomplete="PF('dlgUsuario').show()"
+					actionListener="#{cadastroUsuarioBean.novo}" update=":frmUsuarios:dlgUsuario" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:dataTable id="usuariosTable" var="usuario"
+				value="#{cadastroUsuarioBean.usuarios}"
+				rowKey="#{usuario}" style="margin-top: 20px;width:75%; margin-right: auto; margin-left: auto;"
+				emptyMessage="Nenhum usuario encontrado." rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+
+				<p:column headerText="Nome" style="text-align: center; ">
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+
+				<p:column headerText="Telefone" style="text-align: center; ">
+					<h:outputText value="#{usuario.telefone}" />
+				</p:column>
+
+				<p:column headerText="Editar / Excluir" style="width: 100px; text-align: center">
+					<p:commandButton icon="ui-icon-pencil" title="Editar" oncomplete="PF('dlgUsuario').show()"
+	    					process="@this" update=":frmUsuarios:dlgUsuario" >
+	    				<f:setPropertyActionListener target="#{cadastroUsuarioBean.usuarioSelecionado}" 
+	    					value="#{usuario}" />
+	    			</p:commandButton>
+					
+					<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+	    					process="@this" update=":frmUsuarios:confirmacaoExclusaoDialog" >
+	    				<f:setPropertyActionListener target="#{cadastroUsuarioBean.usuarioSelecionado}" 
+	    					value="#{usuario}" />
+	    			</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+
+			<p:dialog header="Cadastro Usuarios" widgetVar="dlgUsuario"
+				modal="true" width="50%">
+				<p:panelGrid columns="2" id="dlgUsuario"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+
+				<p:outputLabel value="Nome completo" for="nomeUsuario" />
+				<p:inputText id="nomeUsuario" size="40" maxlength="40"
+					value="#{cadastroUsuarioBean.usuarioSelecionado.nome}" />
+					
+				<p:outputLabel value="Email" for="emailUsuario" />
+				<p:inputText id="emailUsuario" size="20" maxlength="20"
+					value="#{cadastroUsuarioBean.usuarioSelecionado.email}" />
+					
+				<p:outputLabel value="Senha" for="senhaUsuario" />
+				<p:password id="senhaUsuario" size="10" maxlength="10"
+					value="#{cadastroUsuarioBean.usuarioSelecionado.senha}" />
+					
+				<p:outputLabel value="Telefone" for="foneUsuario" />
+				<p:inputMask id="foneUsuario" size="14" maxlength="14"
+					mask="(99)99999-9999"
+					value="#{cadastroUsuarioBean.usuarioSelecionado.telefone}" />
+					
+				<p:outputLabel value="CPF" for="cpfUsuario" />
+				<p:inputMask id="cpfUsuario" size="14" maxlength="14" mask="999.999.999-99"
+					value="#{cadastroUsuarioBean.usuarioSelecionado.cpf}" />
+					
+			</p:panelGrid>
+					
+				
+				<div align="right" style="margin-top: 10px">
+					<p:commandButton update="usuariosTable"
+						icon="ui-icon-plus" value="Salvar" actionListener="#{cadastroUsuarioBean.salvar}"
+						oncomplete="PF('dlgUsuario').hide()" />
+				</div>
+			</p:dialog>
+
+			<p:confirmDialog header="Exclusão de Usuário" 
+	    		message="Tem certeza que deseja excluir o usuário #{cadastroUsuarioBean.usuarioSelecionado.nome}?"
+	    		widgetVar="confirmacaoExclusao"	id="confirmacaoExclusaoDialog">
+	    		<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+	    		<p:commandButton value="Sim" oncomplete="PF('confirmacaoExclusao').hide()"
+	    			action="#{cadastroUsuarioBean.excluir}" process="@this"
+	    			update=":frmUsuarios:usuariosTable" />
+	    	</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
