@@ -22,7 +22,7 @@
 
 			<p:toolbar style="margin-top: 20px">
 				<p:toolbarGroup>
-					<p:commandButton value="Pesquisar" disabled="true" />
+					<p:commandButton process="@this" value="Pesquisar" disabled="true" />
 				</p:toolbarGroup>
 				<p:toolbarGroup align="right">
 					<p:commandButton process="@this" value="Novo" oncomplete="PF('dlgUsuario').show()"

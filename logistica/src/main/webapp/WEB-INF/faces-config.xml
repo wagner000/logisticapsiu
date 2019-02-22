@@ -6,10 +6,18 @@
 
 
 	<application>
-
+	
+	<message-bundle>com.logistica.Messages</message-bundle>
+		
 		<locale-config>
 			<default-locale>pt_BR</default-locale>
 		</locale-config>
 	</application>
+
+	<factory>
+		<exception-handler-factory>
+			com.logistica.util.jsf.JsfExceptionHandlerFactory
+		</exception-handler-factory>
+	</factory>
 
 </faces-config>

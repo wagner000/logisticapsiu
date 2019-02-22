@@ -10,6 +10,7 @@ import javax.inject.Named;
 import com.logistica.dao.UsuarioDAO;
 import com.logistica.model.Usuario;
 import com.logistica.util.jsf.FacesUtil;
+import com.logistica.util.jsf.NegocioException;
 
 /**
  * @author Wagner

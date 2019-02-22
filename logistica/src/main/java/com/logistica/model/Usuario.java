@@ -58,7 +58,7 @@ public class Usuario implements Serializable {
 		this.email = email;
 	}
 
-	@NotBlank(message = "deve ser informado") @CPF(message = "CPF inválido")
+	@NotBlank(message = "deve ser informado") @CPF(message = "inválido")
 	@Column(nullable = false, length = 14, unique = true)
 	public String getCpf() {
 		return cpf;
