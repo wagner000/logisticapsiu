@@ -6,15 +6,11 @@
 
 	<p:panelGrid columns="4" style="width: 100%; margin-top: 20px"
 		columnClasses="rotulo, campo, rotulo, campo">
-		<p:outputLabel value="Pedido Nº"
-			rendered="#{!cadastroPedidoBean.pedido.existente}" />
-		<h:outputText value="#{cadastroPedidoBean.pedido.id}"
-			rendered="#{!cadastroPedidoBean.pedido.existente}" />
+		<p:outputLabel value="Pedido Nº" />
+		<h:outputText value="#{cadastroPedidoBean.pedido.id}" />
 
-		<p:outputLabel value="Data de criação"
-			rendered="#{!cadastroPedidoBean.pedido.existente}" />
-		<h:outputText value="#{cadastroPedidoBean.pedido.dataPedido}"
-			rendered="#{!cadastroPedidoBean.pedido.existente}">
+		<p:outputLabel value="Data de criação"/>
+		<h:outputText value="#{cadastroPedidoBean.pedido.dataPedido}">
 			 <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy" />
 		</h:outputText>
 
@@ -24,7 +20,8 @@
 		<p:outputLabel value="Usuário" for="usuario" />
 			
 			<p:selectOneMenu id="usuario"
-							value="#{cadastroPedidoBean.pedido.solicitante}" >
+							value="#{cadastroPedidoBean.pedido.solicitante}"
+							disabled="#{not cadastroPedidoBean.pedido.editando}">
 						<f:selectItem itemLabel="Selecione..." noSelectionOption="true" />
 						<f:selectItems value="#{cadastroPedidoBean.usuarios}"
 							itemValue="#{usuario}" itemLabel="#{usuario.nome}"
@@ -33,7 +30,8 @@
 
 		<p:outputLabel value="Armazém" for="armazem" />
 		<p:selectOneMenu id="armazem"
-			value="#{cadastroPedidoBean.pedido.armazem}">
+			value="#{cadastroPedidoBean.pedido.armazem}"
+			disabled="#{not cadastroPedidoBean.pedido.editando}">
 			<f:selectItem itemLabel="Selecione..." noSelectionOption="true" />
 			<f:selectItems value="#{cadastroPedidoBean.armazem}" var="armz"
 				itemValue="#{armz}" itemLabel="#{armz.nome}" />

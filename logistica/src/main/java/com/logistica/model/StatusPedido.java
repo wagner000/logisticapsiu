@@ -3,7 +3,9 @@ package com.logistica.model;
 public enum StatusPedido {
 
 	EDITANDO("Editando"),
-	ATENDIDO("Atendido");
+	ATENDIDO("Atendido"),
+	CANCELADO("Cancelado"),
+	EMITIDO("Emitido");
 	
 	private String descricao;
 	

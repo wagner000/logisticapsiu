@@ -1,7 +1,6 @@
 package com.logistica.controller;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.faces.view.ViewScoped;
@@ -83,7 +82,6 @@ public class CadastroPedidoBean implements Serializable {
 				break;
 			}
 		}
-		
 		return existeItem;
 	}
 
@@ -126,9 +124,21 @@ public class CadastroPedidoBean implements Serializable {
 	
 	
 	
+	public void emitir() {
+		this.pedido.removerItemVazio();
+		try {
+			this.pedido = pedidoDAO.emitir(pedido);
+			FacesUtil.addInfoMessage("Pedido Emitido com sucesso.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
-	
-	
+	public void cancelar() {
+		this.pedido.removerItemVazio();
+		this.pedido = pedidoDAO.cancelar(pedido);
+		FacesUtil.addInfoMessage("Pedido Cancelado com sucesso.");
+	}
 	
 	
 	public Pedido getPedido() {

@@ -67,6 +67,31 @@ public class Pedido implements Serializable{
 		return StatusPedido.ATENDIDO.equals(this.getStatus());
 	}
 	
+	@Transient
+	public boolean isCancelado() {
+		return StatusPedido.CANCELADO.equals(this.getStatus());
+	}
+	
+	@Transient
+	public boolean isEmissivel() {
+		return this.isExistente() && this.isEditando();
+	}
+	
+	@Transient
+	public boolean isNaoEmissivel() {
+		return !this.isEmissivel();
+	}
+	
+	@Transient
+	public boolean isCancelavel() {
+		return this.isExistente() && !this.isCancelado() && !this.isAtendido();
+	}
+	
+	@Transient
+	public boolean isNaoCancelavel() {
+		return !this.isCancelavel();
+	}
+	
 	public void adcionarItemVazio() {
 		
 		if(this.isEditando()) {
@@ -134,7 +159,7 @@ public class Pedido implements Serializable{
 	
 	
 	@ManyToOne
-	@JoinColumn(name = "responsavel_id", nullable = false)
+	@JoinColumn(name = "responsavel_id")
 	public Usuario getResponsavel() {
 		return responsavel;
 	}
@@ -151,7 +176,7 @@ public class Pedido implements Serializable{
 		this.dataPedido = dataPedido;
 	}
 	
-	@Column(name = "data_atendimento", nullable = false)
+	@Column(name = "data_atendimento")
 	public LocalDateTime getDataAtendimento() {
 		return dataAtendimento;
 	}

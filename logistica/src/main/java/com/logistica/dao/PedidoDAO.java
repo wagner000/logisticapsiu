@@ -17,15 +17,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import com.logistica.dao.filter.PedidoFilter;
 import com.logistica.model.Pedido;
+import com.logistica.model.StatusPedido;
 import com.logistica.util.jpa.Transacional;
+import com.logistica.util.jsf.NegocioException;
 
 public class PedidoDAO implements Serializable {
 
@@ -76,57 +73,31 @@ public class PedidoDAO implements Serializable {
 		return manager.createQuery("from Pedido", Pedido.class).getResultList();
 	}
 	
+	@Transacional
+	public Pedido emitir(Pedido pedido) {
+		pedido = this.salvar(pedido);
+		if(pedido.isEmissivel()) {
+			System.out.println("******EMISSAO PEDIDO******");
+			pedido.setStatus(StatusPedido.EMITIDO);
+			pedido = this.salvar(pedido);
+			return pedido;
+		}else {
+			throw new NegocioException("O pedido não pode ser Emitido com o status "+ pedido.getStatus().getDescricao());
+		}
+	}
 	
-	/*public List<Pedido> filtrados(PedidoFilter filtro) {
-		Session session = this.manager.unwrap(Session.class);
-		
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Pedido.class)
-				// fazemos uma associação (join) com cliente e nomeamos como "c"
-				.createAlias("solicitante", "s")
-				// fazemos uma associação (join) com vendedor e nomeamos como "v"
-				.createAlias("responsavel", "r");
-		
-		if (StringUtils.isNotBlank(filtro.getLiquidacao())) {
-			criteria.add(Restrictions.eq("liquidacao", filtro.getLiquidacao()));
+	@Transacional
+	public Pedido cancelar(Pedido pedido) {
+		pedido = this.salvar(pedido);
+		if(pedido.isCancelavel()) {
+			pedido.setStatus(StatusPedido.CANCELADO);
+			pedido = this.salvar(pedido);
+			return pedido;
+		}else {
+			throw new NegocioException("O pedido não pode ser Cancelado com o status "+ pedido.getStatus().getDescricao());
 		}
-
-		if (StringUtils.isNotBlank(filtro.getNotaFiscal())) {
-			criteria.add(Restrictions.eq("notaFiscal", filtro.getNotaFiscal()));
-		}
-
-		if (filtro.getDataCriacaoDe() != null) {
-			LocalDateTime de = filtro.getDataCriacaoDe().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-			de = de.with(LocalTime.MIN);
-			System.out.println("**DE: "+de);
-			criteria.add(Restrictions.ge("dataPedido", de) );
-		}
-		
-		if (filtro.getDataCriacaoAte() != null) {
-			LocalDateTime ate = filtro.getDataCriacaoAte().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-			ate = ate.with(LocalTime.MAX);
-			System.out.println("**ATE: "+ate);
-			criteria.add(Restrictions.le("dataPedido",ate) );
-			
-		}
-		
-		if (StringUtils.isNotBlank(filtro.getNomeSolicitante())) {
-			// acessamos o nome do cliente associado ao pedido pelo alias "c", criado anteriormente
-			criteria.add(Restrictions.ilike("s.nome", filtro.getNomeSolicitante(), MatchMode.ANYWHERE));
-		}
-		
-		if (StringUtils.isNotBlank(filtro.getNomeResponsavel())) {
-			// acessamos o nome do vendedor associado ao pedido pelo alias "v", criado anteriormente
-			criteria.add(Restrictions.ilike("r.nome", filtro.getNomeResponsavel(), MatchMode.ANYWHERE));
-		}
-		
-		if (filtro.getStatus() != null && filtro.getStatus().length > 0) {
-			// adicionamos uma restrição "in", passando um array de constantes da enum StatusPedido
-			criteria.add(Restrictions.in("status", filtro.getStatus()));
-		}
-		
-		return criteria.addOrder(Order.asc("id")).list();
-	}*/
+	}
+	
 	
 	public List<Pedido> filtrados(PedidoFilter filtro){
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
@@ -179,5 +150,6 @@ public class PedidoDAO implements Serializable {
 		TypedQuery<Pedido> query = manager.createQuery(criteriaQuery);
 		return query.getResultList();
 	}
+
 	
 }

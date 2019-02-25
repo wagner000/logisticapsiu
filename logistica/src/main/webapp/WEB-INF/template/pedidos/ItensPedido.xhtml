@@ -36,7 +36,7 @@
 
 		<p:column headerText="Quantidade"
 			style="text-align: center; width: 100px">
-			<p:inputText size="8" value="#{item.quantidade}"
+			<p:inputText size="8" value="#{item.quantidade}" readonly="#{cadastroPedidoBean.pedido.naoEmissivel}"
 				onkeydown="if (event.keyCode === 13) {onchange();return false;}">
 				<p:ajax event="change" update="tabelaItens" listener="#{cadastroPedidoBean.atualizarQuantidade(item,linha)}" />
 			</p:inputText>
